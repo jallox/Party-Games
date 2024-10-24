@@ -1,0 +1,16 @@
+prefix: "&#FF0000&lP&#FF4000&la&#FF7F00&lr&#FFFF00&lt&#80FF00&ly&#00FF00&lG&#008080&la&#0000FF&lm&#4B0082&le&#7000AB&ls&#9400D3&l!"
+errors:
+  no-permission: "{prefix} &cYou don't have permission to do that!"
+  only-players: "{prefix} &cThis command is only for players!"
+
+party-command:
+  usage: "{prefix} &aTo create a party run &n/party create <name>"
+  party-created: "{prefix} &aParty {name} created successfully! Now you can invite people with &n/party invite <name>"
+  error-creating: "{prefix} &cError creating party. Check console for details"
+  no-party: "{prefix} &cYou don't have any party, create one with &a&n/party create <name>"
+  player-not-exists: "{prefix} &cThe specified player doesn't exists"
+  invited: "{prefix} &aYou have been invited to join {owner}'s party! You can type &n/party join {code}"
+  invited2: "{prefix} &aYour invitation has been sent to {player}! Let's wait a response &7(Inv code: {code})"
+  error-inviting: "{prefix} &cAn error occurred while inviting a player. Check console for details"
+  invalid-code: "{prefix} &cThe code you specified is invalid or empty. Check spelling"
+  joined-party: "{prefix} &aYou joined the party of {owner}!"

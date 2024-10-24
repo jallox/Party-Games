@@ -1,0 +1,15 @@
+name: PartyGames
+version: '2024.0.0'
+main: dev.jayox.partyGames.PartyGames
+api-version: '1.21'
+load: STARTUP
+description: The best all-in-one party games plugin
+
+commands:
+  party:
+    usage: '/party <party name> <public>'
+    description: 'Create a party and invite your friends to play with you'
+  partygames:
+    description: 'Administration command of the plugin'
+  game:
+    description: 'Interact with the game itself'
