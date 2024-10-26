@@ -1,6 +1,5 @@
 package dev.jayox.partyGames.Commands;
 
-import dev.jayox.partyGames.Files.CacheFile;
 import dev.jayox.partyGames.PartyGames;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,6 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -72,14 +73,9 @@ public class PartyCommand implements CommandExecutor {
             }
 
             String partyId = UUID.randomUUID().toString().substring(0, 6);
-            CacheFile partyCache = plugin.getCacheFileManager().createFile("Party_" + partyId + "_" + player.getName());
+            String insertPartyQuery = "INSERT INTO party (partyId, partyName, ownerName, ownerUUID, inGame) VALUES (?, ?, ?, ?, ?)";
 
-            partyCache.setParty(partyId);
-            partyCache.deleteWhenPartyFinish(true);
-            partyCache.addData("owner", player.getName());
-            partyCache.addData("ownerUUID", player.getUniqueId());
-            partyCache.addData("inGame", false);
-            partyCache.addData("name", partyName);
+            plugin.getDbManager().query(insertPartyQuery, new Object[]{partyId, partyName, player.getName(), player.getUniqueId().toString(), false});
 
             player.sendMessage(plugin.getMessageUtil().colorText(
                     plugin.getLangManager().getString("party-command.party-created").replace("{name}", partyName)
@@ -105,8 +101,9 @@ public class PartyCommand implements CommandExecutor {
                 return true;
             }
 
-            CacheFile partyCache = plugin.getCacheFileManager().searchByNameContaining(sender.getName());
-            if (partyCache == null) {
+            String findPartyQuery = "SELECT * FROM party WHERE ownerName = ?";
+            ResultSet rs = plugin.getDbManager().queryResult(findPartyQuery, new Object[]{sender.getName()});
+            if (!rs.next()) {
                 sender.sendMessage(plugin.getMessageUtil().colorText(
                         plugin.getLangManager().getString("party-command.no-party")
                 ));
@@ -122,8 +119,8 @@ public class PartyCommand implements CommandExecutor {
             }
 
             String invToken = UUID.randomUUID().toString().substring(0, 6);
-            partyCache.addData("inviteToken", invToken);
-            partyCache.addData(invToken, invitedPlayer.getName());
+            String updatePartyQuery = "UPDATE party SET inviteToken = ?, invitedPlayer = ? WHERE partyId = ?";
+            plugin.getDbManager().query(updatePartyQuery, new Object[]{invToken, invitedPlayer.getName(), rs.getString("partyId")});
 
             invitedPlayer.sendMessage(plugin.getMessageUtil().colorText(
                     plugin.getLangManager().getString("party-command.invited")
@@ -136,12 +133,11 @@ public class PartyCommand implements CommandExecutor {
             ));
 
             return true;
-        } catch (Exception err) {
+        } catch (SQLException err) {
             sender.sendMessage(plugin.getMessageUtil().colorText(
                     plugin.getLangManager().getString("party-command.error-inviting")
             ));
             plugin.getLogger().warning("Error inviting player: " + err.getMessage());
-            plugin.getLogger().warning(Arrays.toString(err.getStackTrace()));
             return true;
         }
     }
@@ -156,28 +152,26 @@ public class PartyCommand implements CommandExecutor {
             }
 
             String partyCode = args[1];
-            CacheFile partyCache = plugin.getCacheFileManager().searchByNameContaining(partyCode);
-            if (partyCache == null) {
+            String findPartyByCodeQuery = "SELECT * FROM party WHERE inviteToken = ?";
+            ResultSet rs = plugin.getDbManager().queryResult(findPartyByCodeQuery, new Object[]{partyCode});
+            if (!rs.next()) {
                 sender.sendMessage(plugin.getMessageUtil().colorText(
                         plugin.getLangManager().getString("party-command.invalid-code")
                 ));
                 return true;
             }
 
-            partyCache.addData("player", sender.getName());
-
-            String owner = (String) partyCache.getData("owner");
+            String owner = rs.getString("ownerName");
             sender.sendMessage(plugin.getMessageUtil().colorText(
                     plugin.getLangManager().getString("party-command.joined-party").replace("{owner}", owner)
             ));
 
             return true;
-        } catch (Exception err) {
+        } catch (SQLException err) {
             sender.sendMessage(plugin.getMessageUtil().colorText(
                     plugin.getLangManager().getString("party-command.error-joining")
             ));
             plugin.getLogger().warning("Error joining party: " + err.getMessage());
-            plugin.getLogger().warning(Arrays.toString(err.getStackTrace()));
             return true;
         }
     }

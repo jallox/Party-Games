@@ -1,8 +1,7 @@
 package dev.jayox.partyGames;
 
 import dev.jayox.partyGames.Commands.PartyCommand;
-import dev.jayox.partyGames.Files.CacheFile;
-import dev.jayox.partyGames.Files.CacheFilesManager;
+import dev.jayox.partyGames.DB.DBManager;
 import dev.jayox.partyGames.Files.ConfigurationManager;
 import dev.jayox.partyGames.Files.LanguageManager;
 import dev.jayox.partyGames.Utils.Message;
@@ -10,7 +9,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
+import java.sql.SQLException;
 
 @SuppressWarnings({ "unused" })
 public final class PartyGames extends JavaPlugin {
@@ -20,9 +19,11 @@ public final class PartyGames extends JavaPlugin {
 
     private LanguageManager langManager;
 
-    private CacheFilesManager cacheFileManager;
+    private DBManager dbManager;
 
     private Message messageUtil;
+
+
     @Override
     public void onEnable() {
         // Initialize the ConfigurationManager
@@ -40,9 +41,14 @@ public final class PartyGames extends JavaPlugin {
         langManager = new LanguageManager(this);
         getLogger().info("Using default language manager (v" + langManager.langManagerVersion + ")");
 
-        // Initialize the CacheFileManager
-        cacheFileManager = new CacheFilesManager(this);
+        // Initialize the DBManager
+        try {
+            dbManager = new DBManager(this);
+            dbManager.initDB();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
 
         // Initialize the MessageUtil
@@ -79,14 +85,6 @@ public final class PartyGames extends JavaPlugin {
         return langManager;
     }
 
-    /**
-     * Get cache file manager
-     *
-     * @return Cache File Manager
-     */
-    public CacheFilesManager getCacheFileManager() {
-        return cacheFileManager;
-    }
 
     /**
      * Get message util
@@ -95,5 +93,14 @@ public final class PartyGames extends JavaPlugin {
      */
     public Message getMessageUtil() {
         return messageUtil;
+    }
+
+    /**
+     * Get database manager
+     *
+     * @return DB Manager
+     */
+    public DBManager getDbManager() {
+        return dbManager;
     }
 }

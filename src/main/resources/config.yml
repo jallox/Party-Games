@@ -32,11 +32,13 @@ locale: 'en'
 # This will be replaced on statistics, and messages where the placeholder {server_name} is used
 server-name: 'PartyGames! Test server'
 
-# When the old cache is going to be removed, on startup, it will delete old cache before starting plugin,
-# on shutdown, it will delete the cache when disabling plugin.
-# If none, the cache will stay forever and must be deleted manually to improve performance (The plugin won't reuse files).
-clear-cache-at: 'startup'
+database:
+  # Select wich type of database you want to use, if MySQL, you need to specify the host.
+  type: SQLite
 
-# If cache is not working, modify this value to 0xaff4
-# Not used by default, only in pre-frost versions
-cache: 0x00ff
+  # Only replace if using MySQL
+  host: 'localhost'
+  port: 3306
+  dbname: 'PartyGames'
+  user: 'root'
+  password: ''
