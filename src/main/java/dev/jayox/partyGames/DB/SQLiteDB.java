@@ -1,6 +1,8 @@
 package dev.jayox.partyGames.DB;
 
 import dev.jayox.partyGames.PartyGames;
+import org.checkerframework.framework.qual.Unused;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,7 +21,7 @@ public class SQLiteDB implements Database {
         String url = "jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + "/database.db";
         try {
             connection = DriverManager.getConnection(url);
-            createTables();
+            // createTables();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -32,7 +34,6 @@ public class SQLiteDB implements Database {
         }
         return connection;
     }
-
     private void createTables() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS example_table (id INTEGER PRIMARY KEY, name TEXT)";
         try (Statement stmt = connection.createStatement()) {

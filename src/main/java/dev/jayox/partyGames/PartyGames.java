@@ -28,7 +28,7 @@ public final class PartyGames extends JavaPlugin {
     public void onEnable() {
         // Initialize the ConfigurationManager
         configManager = new ConfigurationManager(this);
-        getLogger().info("Login arangement: {}, starting config::service");
+        getLogger().info("Awaiting for plugin to start...");
 
         // Check if the config exists; if not, create it
         if (!configManager.existsConfig()) {
@@ -39,20 +39,21 @@ public final class PartyGames extends JavaPlugin {
 
         // Initialize the LanguageManager
         langManager = new LanguageManager(this);
-        getLogger().info("Using default language manager (v" + langManager.langManagerVersion + ")");
+        getLogger().info("Using language " + configManager.getConfig().getString("locale"));
+
+        // Initialize the MessageUtil
+        messageUtil = new Message();
+
 
         // Initialize the DBManager
         try {
-            dbManager = new DBManager(this);
-            dbManager.initDB();
+            dbManager = new DBManager(this, configManager.getConfig().getString("database.type"));
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-
-        // Initialize the MessageUtil
-        messageUtil = new Message();
 
         // Load commands
         PluginCommand partyCommand = getCommand("party");

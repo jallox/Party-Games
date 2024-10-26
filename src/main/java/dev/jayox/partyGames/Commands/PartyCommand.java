@@ -72,7 +72,7 @@ public class PartyCommand implements CommandExecutor {
                 return true;
             }
 
-            String partyId = UUID.randomUUID().toString().substring(0, 6);
+            String partyId = UUID.randomUUID().toString().substring(0, 4);
             String insertPartyQuery = "INSERT INTO party (partyId, partyName, ownerName, ownerUUID, inGame) VALUES (?, ?, ?, ?, ?)";
 
             plugin.getDbManager().query(insertPartyQuery, new Object[]{partyId, partyName, player.getName(), player.getUniqueId().toString(), false});
@@ -118,19 +118,27 @@ public class PartyCommand implements CommandExecutor {
                 return true;
             }
 
-            String invToken = UUID.randomUUID().toString().substring(0, 6);
-            String updatePartyQuery = "UPDATE party SET inviteToken = ?, invitedPlayer = ? WHERE partyId = ?";
-            plugin.getDbManager().query(updatePartyQuery, new Object[]{invToken, invitedPlayer.getName(), rs.getString("partyId")});
+            String checkPlayerPartyQuery = "SELECT * FROM party WHERE invitedPlayers LIKE ?";
+            ResultSet playerRs = plugin.getDbManager().queryResult(checkPlayerPartyQuery, new Object[]{"%" + invitedPlayer.getName() + "%"});
+            if (playerRs.next()) {
+                sender.sendMessage(plugin.getMessageUtil().colorText(
+                        plugin.getLangManager().getString("party-command.player-already-in-party")
+                ));
+                return true;
+            }
+
+            String partyId = rs.getString("partyId").substring(0, 4);
 
             invitedPlayer.sendMessage(plugin.getMessageUtil().colorText(
                     plugin.getLangManager().getString("party-command.invited")
                             .replace("{owner}", sender.getName())
-                            .replace("{code}", invToken)
+                            .replace("{code}", partyId)
             ));
 
             sender.sendMessage(plugin.getMessageUtil().colorText(
-                    plugin.getLangManager().getString("party-command.invite-sent").replace("{player}", invitedPlayer.getName())
-            ));
+                    plugin.getLangManager().getString("party-command.invite-sent")
+                            .replace("{player}", invitedPlayer.getName())
+                            .replace("{code}", partyId)));
 
             return true;
         } catch (SQLException err) {
@@ -152,7 +160,8 @@ public class PartyCommand implements CommandExecutor {
             }
 
             String partyCode = args[1];
-            String findPartyByCodeQuery = "SELECT * FROM party WHERE inviteToken = ?";
+            sender.sendMessage(partyCode);
+            String findPartyByCodeQuery = "SELECT * FROM party WHERE partyId = ?";
             ResultSet rs = plugin.getDbManager().queryResult(findPartyByCodeQuery, new Object[]{partyCode});
             if (!rs.next()) {
                 sender.sendMessage(plugin.getMessageUtil().colorText(
@@ -160,6 +169,22 @@ public class PartyCommand implements CommandExecutor {
                 ));
                 return true;
             }
+
+            // Check if the player is already in a party
+            String checkPlayerPartyQuery = "SELECT * FROM party WHERE invitedPlayers LIKE ?";
+            ResultSet playerRs = plugin.getDbManager().queryResult(checkPlayerPartyQuery, new Object[]{"%" + sender.getName() + "%"});
+            if (playerRs.next()) {
+                sender.sendMessage(plugin.getMessageUtil().colorText(
+                        plugin.getLangManager().getString("party-command.already-in-party")
+                ));
+                return true;
+            }
+
+            String invitedPlayers = rs.getString("invitedPlayers");
+            invitedPlayers = invitedPlayers == null ? sender.getName() : invitedPlayers + ";" + sender.getName();
+
+            String updatePartyPlayersQuery = "UPDATE party SET invitedPlayers = ? WHERE partyId = ?";
+            plugin.getDbManager().query(updatePartyPlayersQuery, new Object[]{invitedPlayers, partyCode});
 
             String owner = rs.getString("ownerName");
             sender.sendMessage(plugin.getMessageUtil().colorText(
@@ -175,4 +200,5 @@ public class PartyCommand implements CommandExecutor {
             return true;
         }
     }
+
 }
