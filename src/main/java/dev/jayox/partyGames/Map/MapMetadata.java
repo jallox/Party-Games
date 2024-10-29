@@ -7,11 +7,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class MapMetadataManager {
+public class MapMetadata {
     private final File metadataFile;
     private final FileConfiguration config;
 
-    public MapMetadataManager(PartyGames plugin, String mapName) {
+    public MapMetadata(PartyGames plugin, String mapName) {
         // Initialize metadata file and load configuration
         this.metadataFile = new File(plugin.getDataFolder(), "maps/" + mapName + ".yml");
         this.config = YamlConfiguration.loadConfiguration(metadataFile);

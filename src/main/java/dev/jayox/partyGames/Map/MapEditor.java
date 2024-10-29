@@ -1,13 +1,10 @@
 package dev.jayox.partyGames.Map;
 
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.world.block.BlockType;
 import dev.jayox.partyGames.PartyGames;
 import dev.jayox.partyGames.Worlds.Worlds;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
@@ -27,13 +24,10 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.util.BlockVector;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import javax.annotation.Nullable;
 
 public class MapEditor {
     private final PartyGames plugin;
@@ -151,7 +145,7 @@ public class MapEditor {
                 player.sendMessage(plugin.getMessageUtil().colorText("&7Schematic pasted"));
 
                 // Save metadata
-                MapMetadataManager metadataManager = new MapMetadataManager(plugin, mapname);
+                MapMetadata metadataManager = new MapMetadata(plugin, mapname);
                 metadataManager.addData("schematic.name", schematicFile.getName());
                 metadataManager.addData("world.name", editorWorld.getName());
                 metadataManager.addData("pasteLocation.x", pasteLocation.getX());
