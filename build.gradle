@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id("io.github.goooler.shadow") version "8.1.8"
 }
 
 group = 'dev.jayox'
@@ -15,10 +16,21 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven {
+        name = "enginehub-maven"
+        url = "https://maven.enginehub.org/repo/"
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT")
+    implementation("dev.triumphteam:triumph-gui:3.1.10")
+
+}
+
+shadowJar {
+    relocate("dev.triumphteam.gui", "dev.jayox.partyGames.gui")
 }
 
 def targetJavaVersion = 21
@@ -37,6 +49,11 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
+}
+
+tasks.named('shadowJar') {
+    archiveClassifier.set('')  // Elimina el sufijo -all del JAR
+    minimize()  // Reduce el tamaño del JAR eliminando clases no utilizadas
 }
 
 processResources {
