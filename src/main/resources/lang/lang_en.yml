@@ -15,3 +15,5 @@ party-command:
   invalid-code: "{prefix} &cThe code you specified is invalid or empty. Check spelling"
   error-joining: "{prefix} &cError while joining the party"
   joined-party: "{prefix} &aYou joined the party of {owner}!"
+
+admin: "{prefix} &8&lADMIN: {text}"

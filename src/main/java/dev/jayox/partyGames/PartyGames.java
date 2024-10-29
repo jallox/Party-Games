@@ -7,6 +7,7 @@ import dev.jayox.partyGames.Commands.PartyCommand;
 import dev.jayox.partyGames.DB.DBManager;
 import dev.jayox.partyGames.Files.ConfigurationManager;
 import dev.jayox.partyGames.Files.LanguageManager;
+import dev.jayox.partyGames.MainCommand.TabCompleter;
 import dev.jayox.partyGames.Utils.Message;
 import org.apache.maven.model.License;
 import org.bukkit.command.PluginCommand;
@@ -73,6 +74,7 @@ public final class PartyGames extends JavaPlugin {
 
         PluginCommand mainCommand = getCommand("pg");
         mainCommand.setExecutor(new MainCommand(this));
+        mainCommand.setTabCompleter(new TabCompleter());
 
 
         LicenseActivator licenseActivator = new LicenseActivator();

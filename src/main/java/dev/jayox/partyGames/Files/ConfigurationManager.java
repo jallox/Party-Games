@@ -56,7 +56,7 @@ public class ConfigurationManager {
             // Save the default config file from resources to the data folder
             plugin.saveResource("config.yml", false); // 'false' prevents overwriting if the file exists
             plugin.getLogger().info("Config file created successfully.");
-            this.config = loadConfig();
+            loadConfig();
             return true;  // File created successfully
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to create config file: " + e.getMessage());
@@ -82,7 +82,7 @@ public class ConfigurationManager {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (configFile.delete()) {
             plugin.saveDefaultConfig();  // Save the default config from resources
-            this.config = loadConfig();  // Reload the config
+            loadConfig();  // Reload the config
             plugin.getLogger().info("Config file regenerated.");
         } else {
             plugin.getLogger().warning("Failed to regenerate config file.");
@@ -95,7 +95,7 @@ public class ConfigurationManager {
      * @return the YamlConfiguration object representing the config.yml.
      */
     public YamlConfiguration getConfig() {
-        return this.config;
+        return loadConfig();
     }
 
     /**
@@ -129,6 +129,8 @@ public class ConfigurationManager {
      */
     private YamlConfiguration loadConfig() {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
+        this.config = YamlConfiguration.loadConfiguration(configFile);
+
         return YamlConfiguration.loadConfiguration(configFile);
     }
 }
