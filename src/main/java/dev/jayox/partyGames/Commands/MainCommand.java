@@ -144,7 +144,7 @@ public class MainCommand implements CommandExecutor {
                 sender.sendMessage(plugin.getMessageUtil().colorText("&8Also watch &nhttps://partygames.gitbook.io/partygames-documentation/"));
                 sender.sendMessage(plugin.getMessageUtil().colorText(" "));
 
-                sender.sendMessage(plugin.getMessageUtil().colorText("&e/pg modify <mapname>"));
+                sender.sendMessage(plugin.getMessageUtil().colorText("&e/pg map modify <mapname>"));
                 sender.sendMessage(plugin.getMessageUtil().colorText("&7Modifies a map (Launch a new editor world)"));
                 sender.sendMessage(plugin.getMessageUtil().colorText("&8Also watch &nhttps://partygames.gitbook.io/partygames-documentation/"));
 
