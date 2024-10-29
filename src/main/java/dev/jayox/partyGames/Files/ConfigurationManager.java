@@ -17,8 +17,6 @@ public class ConfigurationManager {
      */
     public ConfigurationManager(PartyGames p) {
         this.plugin = p;
-        // Initialize config when the manager is created
-        this.config = loadConfig();
     }
 
     /**
@@ -58,6 +56,7 @@ public class ConfigurationManager {
             // Save the default config file from resources to the data folder
             plugin.saveResource("config.yml", false); // 'false' prevents overwriting if the file exists
             plugin.getLogger().info("Config file created successfully.");
+            this.config = loadConfig();
             return true;  // File created successfully
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to create config file: " + e.getMessage());
