@@ -4,6 +4,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import dev.jayox.partyGames.Commands.MainCommand;
 import dev.jayox.partyGames.Commands.PartyCommand;
+import dev.jayox.partyGames.Commands.PartyCommandTabCompleter;
 import dev.jayox.partyGames.DB.DBManager;
 import dev.jayox.partyGames.Files.ConfigurationManager;
 import dev.jayox.partyGames.Files.LanguageManager;
@@ -71,6 +72,7 @@ public final class PartyGames extends JavaPlugin {
         // Load commands
         PluginCommand partyCommand = getCommand("party");
         partyCommand.setExecutor(new PartyCommand(this));
+        partyCommand.setTabCompleter(new PartyCommandTabCompleter());
 
         PluginCommand mainCommand = getCommand("pg");
         mainCommand.setExecutor(new MainCommand(this));

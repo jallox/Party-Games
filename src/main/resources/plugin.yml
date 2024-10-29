@@ -11,5 +11,3 @@ commands:
     description: 'Create a party and invite your friends to play with you'
   pg:
     description: 'Administration command of the plugin'
-  game:
-    description: 'Interact with the game itself'
