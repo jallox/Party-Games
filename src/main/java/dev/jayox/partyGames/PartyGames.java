@@ -8,11 +8,13 @@ import dev.jayox.partyGames.DB.DBManager;
 import dev.jayox.partyGames.Files.ConfigurationManager;
 import dev.jayox.partyGames.Files.LanguageManager;
 import dev.jayox.partyGames.Utils.Message;
+import org.apache.maven.model.License;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.http.HttpClient;
 import java.sql.SQLException;
 
 @SuppressWarnings({ "unused" })
@@ -72,8 +74,23 @@ public final class PartyGames extends JavaPlugin {
         PluginCommand mainCommand = getCommand("pg");
         mainCommand.setExecutor(new MainCommand(this));
 
-        // TODO: Implement bStats metrics, and license verification
 
+        LicenseActivator licenseActivator = new LicenseActivator();
+        switch (licenseActivator.activateLicense(getConfig().getString("LICENSE_KEY"), this.getName())) {
+            case 1 -> {
+                getLogger().info("[License activator]: License is valid!");
+            }
+            case 2 -> {
+                getLogger().warning("[License activator]:  You have reached your daily quota! Disabling plugin!");
+                this.setEnabled(false);
+            }
+            default -> {
+                getLogger().warning("[License activator]: Your license is not valid! Disabling plugin!");
+                this.setEnabled(false);
+            }
+        }
+
+        // TODO: Implement bStats metrics
     }
 
     @Override

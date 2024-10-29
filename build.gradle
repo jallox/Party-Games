@@ -26,6 +26,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT")
     implementation("dev.triumphteam:triumph-gui:3.1.10")
+    implementation('org.json:json:20231013')
 
 }
 
