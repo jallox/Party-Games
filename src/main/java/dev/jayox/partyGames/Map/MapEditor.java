@@ -143,14 +143,20 @@ public class MapEditor {
                 ClipboardHolder holder = new ClipboardHolder(clipboard);
 
                 Operation operation = holder.createPaste(editSession)
-                                        .to(pasteLocation)
-                                        .build();
+                        .to(pasteLocation)
+                        .build();
                 Operations.complete(operation);
+
                 plugin.getLogger().info("[Map Editor Main]: Schematic pasted at (0, 0, 0) in world " + mapname);
                 player.sendMessage(plugin.getMessageUtil().colorText("&7Schematic pasted"));
-                player.sendMessage(plugin.getMessageUtil().colorText("&7Start setting up your map with &n/pg map setspawn"));
-                player.sendMessage(plugin.getMessageUtil().colorText("&7Select the corresponding minigame with &n/pg map minigame <minigame>"));
-                player.sendMessage(plugin.getMessageUtil().colorText("&7When you finish, run &n/pg map save"));
+
+                // Save metadata
+                MapMetadataManager metadataManager = new MapMetadataManager(plugin, mapname);
+                metadataManager.addData("schematic.name", schematicFile.getName());
+                metadataManager.addData("world.name", editorWorld.getName());
+                metadataManager.addData("pasteLocation.x", pasteLocation.getX());
+                metadataManager.addData("pasteLocation.y", pasteLocation.getY());
+                metadataManager.addData("pasteLocation.z", pasteLocation.getZ());
 
                 // Teleport player to paste location
                 player.teleport(new org.bukkit.Location(editorWorld, 0, 0, 0));
@@ -162,8 +168,6 @@ public class MapEditor {
                     Score schematicScore = objective.getScore(plugin.getMessageUtil().chatColor("&aSchematic: " + schematicFile.getName()));
                     schematicScore.setScore(0);
                 }
-            } catch (MaxChangedBlocksException e) {
-                throw new RuntimeException(e);
             } catch (WorldEditException e) {
                 throw new RuntimeException(e);
             }
