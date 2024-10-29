@@ -1,5 +1,6 @@
 package dev.jayox.partyGames.MainCommand;
 
+import com.sun.tools.javac.Main;
 import dev.jayox.partyGames.Map.MapEditor;
 import dev.jayox.partyGames.PartyGames;
 import org.bukkit.command.CommandSender;
@@ -57,8 +58,12 @@ public class HandleMapCommand {
 
             sender.sendMessage(plugin.getMessageUtil().colorText("&7&lHelp Menu (Map)-----------------"));
         } else {
+            MainHandler mainHandler = new MainHandler(plugin);
             switch (args[1].toLowerCase()) {
                 case "editor" -> new MapEditor(plugin).createMapEditor(args[2], (Player) sender);
+                case "setspawn" -> mainHandler.handleSetSpawn(sender, plugin);
+                case "setrespawn" -> mainHandler.handleSetRespawn(sender, plugin);
+                case "setwaiting" -> mainHandler.handleSetWaiting(sender, plugin);
             }
         }
     }
