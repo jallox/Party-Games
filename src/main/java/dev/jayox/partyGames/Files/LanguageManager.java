@@ -20,7 +20,6 @@ public class LanguageManager {
     private final PartyGames plugin;
     private YamlConfiguration languageConfig;
     private final Logger logger;
-    public String langManagerVersion = "0.4.2Br/12q12wgf3.license";
     public LanguageManager(PartyGames plugin) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
@@ -54,6 +53,10 @@ public class LanguageManager {
 
         // Load the language configuration
         this.languageConfig = YamlConfiguration.loadConfiguration(langFile);
+    }
+
+    public String getPrefix() {
+        return languageConfig.getString("prefix");
     }
 
     /**
