@@ -1,22 +1,18 @@
 package dev.jayox.partyGames;
 
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import dev.jayox.partyGames.Commands.MainCommand;
 import dev.jayox.partyGames.Commands.PartyCommand;
 import dev.jayox.partyGames.Commands.PartyCommandTabCompleter;
 import dev.jayox.partyGames.DB.DBManager;
 import dev.jayox.partyGames.Files.ConfigurationManager;
 import dev.jayox.partyGames.Files.LanguageManager;
-import dev.jayox.partyGames.MainCommand.TabCompleter;
+import dev.jayox.partyGames.MainCommand.MainCommandTabCompletions;
 import dev.jayox.partyGames.Utils.Message;
-import org.apache.maven.model.License;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.net.http.HttpClient;
 import java.sql.SQLException;
 
 @SuppressWarnings({ "unused" })
@@ -76,7 +72,7 @@ public final class PartyGames extends JavaPlugin {
 
         PluginCommand mainCommand = getCommand("pg");
         mainCommand.setExecutor(new MainCommand(this));
-        mainCommand.setTabCompleter(new TabCompleter());
+        mainCommand.setTabCompleter(new MainCommandTabCompletions());
 
 
         LicenseActivator licenseActivator = new LicenseActivator();
